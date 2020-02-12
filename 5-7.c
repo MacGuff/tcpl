@@ -32,3 +32,19 @@ int readlines(char lines[][MAXLEN], int maxlines)
     return nlines;
 }
 
+void writelines(char lines[][MAXLEN], int nlines)
+{
+    while(nlines-- > 0)
+        puts(*lines++);
+}
+
+char lines[MAXLINES][MAXLEN];
+
+int main(void)
+{
+    int nlines = readlines(lines, MAXLINES);
+    
+    writelines(lines, nlines);
+    
+    return 0;
+}
