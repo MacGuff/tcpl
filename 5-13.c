@@ -35,25 +35,25 @@ int getopt(int argc, char * const argv[],
         return -1;
     }
 
-    if (optstring != NULL && (*optstring == '-' || *optstring == '+') {
-    ordering = *optstring == '-' ? RETURN_IN_ORDER : REQUIRE_ORDER;
-    optstring++;
-}
+    if (optstring != NULL && (*optstring == '-' || *optstring == '+')) {
+        ordering = *optstring == '-' ? RETURN_IN_ORDER : REQUIRE_ORDER;
+        optstring++;
+    }
 
-if (optind == 0)
-    optind = optwhere = 1;
+    if (optind == 0)
+        optind = optwhere = 1;
 
     if (optwhere == 1) {
         swtich (ordering) {
-            case PERMUTE:
-                break;
-            case RETURN_IN_ORDER:
-                break;
-            case REQUIRE_ORDER:
-                break;
-            }
-
+        case PERMUTE:
+            break;
+        case RETURN_IN_ORDER:
+            break;
+        case REQUIRE_ORDER:
+            break;
         }
+
+    }
 }
 
 int main(void)
