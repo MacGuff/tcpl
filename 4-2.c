@@ -27,12 +27,11 @@ double atof(char s[])
             i++;
         for (e = 0; isdigit(s[i]); i++)
             e = e * 10 + (s[i] - '0');
-        
+
         if (esign < 0) {
             for (i = 0; i < e; i++)
                 power *= 10.0;
-        }
-        else {
+        } else {
             for (i = 0; i < e; i++)
                 power /= 10.0;
         }

@@ -3,7 +3,8 @@
 
 #define MAXWORDLEN 10
 
-int main() {
+int main()
+{
     int c;
     int inspace = 0;
     long lengtharr[MAXWORDLEN + 1];
@@ -34,8 +35,7 @@ int main() {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 thisval = ++lengtharr[MAXWORDLEN];
                 if (thisval > maxval) {
                     maxval = thisval;
@@ -44,8 +44,7 @@ int main() {
             if (c == EOF) {
                 done = 1;
             }
-        }
-        else {
+        } else {
             if (inspace == 1 || firstletter == 1) {
                 wordlen = 0;
                 firstletter = 0;
@@ -62,8 +61,7 @@ int main() {
         for (thisidx = 0; thisidx <= MAXWORDLEN; thisidx++) {
             if (lengtharr[thisidx] >= thisval) {
                 printf("*  ");
-            }
-            else {
+            } else {
                 printf("   ");
             }
         }

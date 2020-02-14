@@ -6,8 +6,7 @@ int hexalpha2int(int c)
     int i;
     int answer = 0;
 
-    for (i = 0; answer == 0 && hexalpha[i] != '\0'; i++)
-    {
+    for (i = 0; answer == 0 && hexalpha[i] != '\0'; i++) {
         if (hexalpha[i] == c)
             answer = 10 + (i / 2);
     }
@@ -21,24 +20,18 @@ unsigned int htoi(const char *s)
     int valid = 1;
     int hexit;
 
-    if (s[i] == 0)
-    {
+    if (s[i] == 0) {
         ++i;
-        if (s[i] == 'x' || s[i] == 'X')
-        {
+        if (s[i] == 'x' || s[i] == 'X') {
             ++i;
         }
     }
 
-    while (valid && s[i] != '\0')
-    {
+    while (valid && s[i] != '\0') {
         ans = ans * 16;
-        if (s[i] >= '0' && s[i] <= '9')
-        {
+        if (s[i] >= '0' && s[i] <= '9') {
             ans += s[i] - '0';
-        }
-        else
-        {
+        } else {
             hexit = hexalpha2int(s[i]);
             if (hexit == 0)
                 valid = 0;

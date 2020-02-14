@@ -11,13 +11,13 @@
 
 int main ()
 {
-	int	x, y;
+    int x, y;
 
-	x = 1;
-	y = 2;
-	printf("Before swap:\tx = %d, y = %d.\n", x, y);
-	SWAP(int, x, y);
-	printf("After swap:\tx = %d, y = %d.\n", x, y);
+    x = 1;
+    y = 2;
+    printf("Before swap:\tx = %d, y = %d.\n", x, y);
+    SWAP(int, x, y);
+    printf("After swap:\tx = %d, y = %d.\n", x, y);
 
-	return 0;
+    return 0;
 }

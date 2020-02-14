@@ -19,16 +19,16 @@ int m_getline(char *s, int lim)
 int readlines(char lines[][MAXLEN], int maxlines)
 {
     int len, nlines;
-    
+
     nlines = 0;
-    
-    while((len = m_getline(lines[nlines], MAXLEN)) > 0){
+
+    while((len = m_getline(lines[nlines], MAXLEN)) > 0) {
         if (nlines > MAXLINES)
             return -1;
         else
             lines[nlines++][len-1] = '\0';
     }
-    
+
     return nlines;
 }
 
@@ -43,8 +43,8 @@ char lines[MAXLINES][MAXLEN];
 int main(void)
 {
     int nlines = readlines(lines, MAXLINES);
-    
+
     writelines(lines, nlines);
-    
+
     return 0;
 }

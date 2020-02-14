@@ -2,7 +2,8 @@
 
 #define MAXLINE 1024
 
-void discardnewline(char s[]) {
+void discardnewline(char s[])
+{
     int i;
     for (i = 0; s[i]; i++) {
         if (s[i] == '\n')
@@ -10,7 +11,8 @@ void discardnewline(char s[]) {
     }
 }
 
-void reverse(char s[]) {
+void reverse(char s[])
+{
     char c;
     int i, j;
     for (j = 0; s[j]; j++)
@@ -24,7 +26,8 @@ void reverse(char s[]) {
     }
 }
 
-int getline(char s[], int lim) {
+int getline(char s[], int lim)
+{
     int c, i;
     for(i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
         s[i] = c;
@@ -37,7 +40,8 @@ int getline(char s[], int lim) {
     return i;
 }
 
-int main() {
+int main()
+{
     char line[MAXLINE];
     while (getline(line, MAXLINE) > 0) {
         discardnewline(line);

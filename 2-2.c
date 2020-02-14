@@ -8,8 +8,7 @@ int main(int argc, char const *argv[])
     int c;
     char s[MAXLINE];
 
-    while (i < MAXLINE - 1)
-    {
+    while (i < MAXLINE - 1) {
         c = getchar();
         if (c == EOF)
             break;

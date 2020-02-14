@@ -21,7 +21,7 @@ int  bitcount2(unsigned x)
 int main()
 {
     int i;
-    for (i = 0; i < 1000; i++){
+    for (i = 0; i < 1000; i++) {
         printf("bitcount1(%d)=%d, bitcount2(%d)=%d\n", i, bitcount1(i), i, bitcount2(i));
     }
 }

@@ -1,12 +1,14 @@
 #include <stdio.h>
 
-float ftoc(float f) {
+float ftoc(float f)
+{
     float c;
     c = (5.0/9.0) * (f - 32.0);
     return c;
 }
 
-int main() {
+int main()
+{
     float fahr, celsius;
     float lower, upper, step;
 

@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int main() {
+int main()
+{
     int c;
     int inspace = 1;
     while ((c = getchar()) != EOF) {
@@ -10,8 +11,7 @@ int main() {
                 putchar('\n');
                 inspace = 1;
             }
-        }
-        else {
+        } else {
             putchar(c);
             inspace = 0;
         }

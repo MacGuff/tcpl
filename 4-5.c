@@ -8,8 +8,7 @@
 #define NUMBER '0'
 
 /* support cos, sin, exp and sqrt */
-enum
-{
+enum {
     COS,
     SIN,
     EXP,
@@ -42,8 +41,7 @@ double pop()
 {
     if (sp > 0)
         return val[--sp];
-    else
-    {
+    else {
         printf("error: stack underflow\n");
         return 0.0;
     }
@@ -80,8 +78,7 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t') /* skip whitespace */
         ;
 
-    if (isalpha(c))
-    {
+    if (isalpha(c)) {
         i = 0;
         while (isalpha(s[++i] = c = getch()))
             ;
@@ -99,27 +96,22 @@ int getop(char s[])
         else
             return UNKNOWN;
     }
-    if (!isdigit(c) && c != '.')
-    {
-        if (c == '-')
-        { /* negative operand */
+    if (!isdigit(c) && c != '.') {
+        if (c == '-') {
+            /* negative operand */
             if (isdigit(d = getch()) || d == '.')
                 s[i = 1] = c = d;
-            else
-            {
+            else {
                 if (d != EOF)
                     ungetch(d);
                 s[1] = '\0';
                 return c;
             }
-        }
-        else
-        {
+        } else {
             s[1] = '\0';
             return c;
         }
-    }
-    else
+    } else
         i = 0;
 
     if (isdigit(c))
@@ -159,10 +151,8 @@ int main()
     double op1, op2;
     char s[MAXOP];
 
-    while ((type = getop(s)) != EOF)
-    {
-        switch (type)
-        {
+    while ((type = getop(s)) != EOF) {
+        switch (type) {
         case NUMBER:
             push(atof(s));
             break;
@@ -191,17 +181,14 @@ int main()
             break;
         case '/':
         case '%':
-            if ((op2 = pop()) != 0.0)
-            {
+            if ((op2 = pop()) != 0.0) {
                 if (type == '/')
                     push(pop() / op2);
-                else
-                {
+                else {
                     op1 = pop();
                     push(op1 - op2 * ((int)(op1 / op2))); /* a % b = a - b * (a / b) */
                 }
-            }
-            else
+            } else
                 printf("error: zero divisor\n");
             break;
         case '=':

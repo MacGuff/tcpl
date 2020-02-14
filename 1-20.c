@@ -6,11 +6,13 @@
 #define SPACE ' '
 #define TAB '\t'
 
-int numberOfSpaces(int offset, int tabsize) {
+int numberOfSpaces(int offset, int tabsize)
+{
     return tabsize - (offset % tabsize);
 }
 
-int getline(char s[], int lim) {
+int getline(char s[], int lim)
+{
     int c, i;
     for(i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
         s[i] = c;
@@ -23,7 +25,8 @@ int getline(char s[], int lim) {
     return i;
 }
 
-int main() {
+int main()
+{
     char buffer[MAX_BUFFER];
     int tabsize = 4;
     int i, j, k, l;
@@ -35,8 +38,7 @@ int main() {
                     putchar(SPACE);
                     l++;
                 }
-            }
-            else {
+            } else {
                 putchar(buffer[i]);
                 l++;
             }

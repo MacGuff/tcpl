@@ -2,7 +2,8 @@
 
 #define MINLEN 81
 
-int readbuff(char buffer[]) {
+int readbuff(char buffer[])
+{
     size_t i = 0;
     int c;
     while (i < MINLEN) {
@@ -14,7 +15,8 @@ int readbuff(char buffer[]) {
     return 1;
 }
 
-int copyline(char buffer[]) {
+int copyline(char buffer[])
+{
     size_t i;
     int c;
     int status = 1;
@@ -31,7 +33,8 @@ int copyline(char buffer[]) {
     return status;
 }
 
-int main() {
+int main()
+{
     char buffer[MINLEN];
     int status = 0;
     while (status != -1) {

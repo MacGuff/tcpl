@@ -37,39 +37,39 @@ int main(int argc, char *argv[])
 {
     int i;
     double value;
-    for(i = 1; i < argc; i++){
-        switch(argv[i][0]){
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                push(atof(argv[i]));
-                break;
-            case '+':
-                push(pop() + pop());
-                break;
-            case '-':
-                value = pop();
-                push(pop() - value);
-                break;
-            case '*':
-                push(pop() * pop());
-                break;
-            case '/':
-                value = pop();
-                push(pop() / value);
-                break;      
-            default:
-                panic("unkonwn operator");
+    for(i = 1; i < argc; i++) {
+        switch(argv[i][0]) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            push(atof(argv[i]));
+            break;
+        case '+':
+            push(pop() + pop());
+            break;
+        case '-':
+            value = pop();
+            push(pop() - value);
+            break;
+        case '*':
+            push(pop() * pop());
+            break;
+        case '/':
+            value = pop();
+            push(pop() / value);
+            break;
+        default:
+            panic("unkonwn operator");
         }
     }
-    
+
     printf("%g\n", pop());
     return 0;
 }

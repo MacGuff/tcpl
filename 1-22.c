@@ -4,7 +4,8 @@
 
 char line[MAXLINE];
 
-int getline(char s[]) {
+int getline(char s[])
+{
     int c, i;
     for(i = 0; i < MAXLINE - 1 && (c = getchar()) != EOF && c != '\n'; ++i) {
         s[i] = c;
@@ -19,7 +20,8 @@ int getline(char s[]) {
 
 #define FOLDLENGTH 70
 
-int main() {
+int main()
+{
     int t, len;
     int location, spaceHolder;
 

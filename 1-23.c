@@ -34,14 +34,12 @@ int main(int argc, char const *argv[])
                     quote = c;
                     state = QUOTE;
                     putchar(c);
-                }
-                else if (c == "/*"[0])
+                } else if (c == "/*"[0])
                     state = SLASH;
                 else
                     putchar(c);
             }
-        }
-        else if (state == QUOTE) {
+        } else if (state == QUOTE) {
             /* within quoted string or character constant. */
             putchar(c);
             if (c == '\\')
@@ -54,8 +52,7 @@ int main(int argc, char const *argv[])
                     state = PROGRAM;
                 else if (c != '*')
                     state = COMMENT;
-            }
-            else /* state == LITERAL */ {
+            } else { /* state == LITERAL */
                 putchar(c);
                 state = QUOTE;
             }
@@ -63,7 +60,7 @@ int main(int argc, char const *argv[])
 
 
     }
-            if (state == SLASH)
-            putchar('/');
+    if (state == SLASH)
+        putchar('/');
     return 0;
 }

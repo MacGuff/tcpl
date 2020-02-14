@@ -3,7 +3,8 @@
 #define TABLE '\t'
 #define NL '\n'
 
-int main() {
+int main()
+{
     int space, table, nl;
 
     space = table = nl = 0;

@@ -3,13 +3,15 @@
 
 #define MAXQUEUE 1001
 
-int advance(int pointer) {
+int advance(int pointer)
+{
     if (point < MAXQUEUE - 1)
         return point + 1;
     return 0;
 }
 
-int main() {
+int main()
+{
     char blank[MAXQUEUE];
     int head, tail;
     int nonspace;
@@ -29,8 +31,7 @@ int main() {
                 spaceJustPrinted = 0;
                 nonspace = 0;
             }
-        }
-        else if (c == ' ' || c == '\t') {
+        } else if (c == ' ' || c == '\t') {
             if (advance(head) == tail) {
                 putchar(blank[tail]);
                 spaceJustPrinted = 1;
@@ -40,8 +41,7 @@ int main() {
 
             blank[head] = c;
             head = advance(head);
-        }
-        else {
+        } else {
             while (head != tail) {
                 putchar(blank[tail]);
                 tail = advance(tail);
