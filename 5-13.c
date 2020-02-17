@@ -12,7 +12,6 @@ enum {
 } flag_verbosity = sometimes;
 
 static int flag_skip = 0;
-
 static unsigned long number = 10L;
 
 static const char *optstring = "n:l:qvVh";
@@ -95,7 +94,6 @@ char *xgetline(FILE *f)
     int c;
 
     size =  0;
-
     buf = malloc(LINE_BUF);
     allocated = LINE_BUF;
 
@@ -168,25 +166,42 @@ char *deq(queue_t *q)
 
 void tail(FILE *f)
 {
+    char buf[LINE_BUF];
+    int c;
+    size_t skipped = 0;
+    size_t num_read;
     char *line;
     //long lineno = 0;
     queue_t q;
 
     QUEUE_INIT(q);
 
-    while((line = xgetline(f)) != NULL) {
-        enq(&q, line);
-        if(q.size > number)
-            free(deq(&q));
-    }
+    if(flag_skip) {
+        while((c =getc(f)) != EOF) {
+            if (c == '\n')
+                skipped++;
+            if(skipped >= number )
+                break;
+        }
 
-    char *p;
-    while(q.size > 0) {
-        p = deq(&q);
-        puts(p);
-        free(p);
-    }
+        while(!feof(f)) {
+            num_read = fread(buf, 1, LINE_BUF, f);
+            fwrite(buf, 1, num_read, stdout);
+        }
+    } else {
+        while((line = xgetline(f)) != NULL) {
+            enq(&q, line);
+            if(q.size > number)
+                free(deq(&q));
+        }
 
+        char *p;
+        while(q.size > 0) {
+            p = deq(&q);
+            puts(p);
+            free(p);
+        }
+    }
 }
 int main(int argc, char **argv)
 {
