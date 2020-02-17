@@ -1,62 +1,240 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <getopt.h>
 
-char *optarg = NULL;
+#define VERSION "1.0.0"
+#define PROGRAM_NAME "tail"
 
-int optind = 1;
-int optopt = '?';
-int opterr = 1;
+#define LINE_BUF 100
+enum {
+    sometimes, quiet, verbose
+} flag_verbosity = sometimes;
 
-typedef struct option {
-    const char *name;
-    int         has_arg;
-    int        *flag;
-    int         val;
-} option_t;
+static int flag_skip = 0;
 
-typedef enum order {
-    PERMUTE,
-    RETURN_IN_ORDER,
-    REQUIRE_ORDER
-} order_t;
+static unsigned long number = 10L;
 
-int getopt(int argc, char * const argv[],
-           const char *optstring,
-           const struct option *longopts, int *longindex)
+static const char *optstring = "n:l:qvVh";
+static struct option long_options[] = {
+    {"lines", required_argument, 0, 'n'},
+    {"quiet", no_argument, 0, 'q'},
+    {"silent", no_argument, 0, 'q'},
+    {"verbose", no_argument, 0, 'v'},
+    {"help",no_argument, 0, 'h'},
+    {"version", no_argument, 0, 'V'},
+    {0,0,0,0}
+};
+
+void help()
 {
-    order_t ordering = PERMUTE;
-    static optwhere = 0;
+    puts("Print the last 10 lines of each FILE to standard output.");
+    puts("");
+    puts("Usage: tail [-lnqvVh]... [FILE]...");
+}
 
-    if (argc == 0 || argv == NULL || optstring == NULL || longopts == NULL)
-        return (optopt = '?');
-    if (optind >= argc || argv[optind] == NULL)
-        return -1;
-    if (strcmp(argv[optind], "--") == 0) {
-        optind++;
-        return -1;
-    }
+void version(void)
+{
+    puts(VERSION);
+}
 
-    if (optstring != NULL && (*optstring == '-' || *optstring == '+')) {
-        ordering = *optstring == '-' ? RETURN_IN_ORDER : REQUIRE_ORDER;
-        optstring++;
-    }
-
-    if (optind == 0)
-        optind = optwhere = 1;
-
-    if (optwhere == 1) {
-        swtich (ordering) {
-        case PERMUTE:
+void parse_opt(int argc, char **argv)
+{
+    int op;
+    char *p;
+    while (1) {
+        op = getopt_long(argc, argv, optstring, long_options, NULL);
+        if(op == -1)
             break;
-        case RETURN_IN_ORDER:
-            break;
-        case REQUIRE_ORDER:
+
+        switch (op) {
+        case 'l':
+        case 'n': {
+            char *endp;
+            p = optarg;
+            if (*p == '+') {
+                flag_skip = 1;
+                p++;
+            }
+
+            number = strtol(p, &endp, 10);
+            if (*endp != '\0') {
+                fprintf(stderr, "invalid number of lines: %s\n", p);
+                exit(1);
+            }
             break;
         }
-
+        case 'q':
+            flag_verbosity = quiet;
+            break;
+        case 'v':
+            flag_verbosity = verbose;
+            break;
+        case 1:
+        case 'h':
+            help();
+            exit(EXIT_SUCCESS);
+            break;
+        case 'V':
+            version();
+            exit(EXIT_SUCCESS);
+            break;
+        case '?':
+            exit(1);
+            break;
+        default:
+            exit (1);
+        }
     }
 }
 
-int main(void)
+char *xgetline(FILE *f)
 {
+    char *buf;
+    long size, allocated;
+    int c;
+
+    size =  0;
+
+    buf = malloc(LINE_BUF);
+    allocated = LINE_BUF;
+
+    while ((c = getc(f)) != EOF) {
+        if (c != '\n') {
+            if (size == allocated -1) {
+                allocated += LINE_BUF;
+                buf = realloc(buf, allocated);
+            }
+            buf[size++] = c;
+        } else {
+            buf[size] = '\0';
+            return buf;
+        }
+    }
+
+    return NULL;
+}
+
+typedef struct queue_el {
+    char *line;
+    struct queue_el *next;
+} queue_el_t;
+
+typedef struct {
+    queue_el_t *first, *last;
+    size_t size;
+} queue_t;
+
+#define QUEUE_INIT(queue) {\
+    queue.first = NULL;\
+    queue.last = NULL;\
+    queue.size = 0;\
+}
+
+void enq(queue_t *q, char *s)
+{
+    queue_el_t *el = malloc(sizeof(queue_el_t));
+    el->line = s;
+    el->next = NULL;
+
+    if (q->first == NULL && q->last == NULL) {
+        q->first = q->last = el;
+        q->size = 1;
+    } else {
+        q->last->next = el;
+        q->last = el;
+        q->size++;
+    }
+
+}
+
+char *deq(queue_t *q)
+{
+    queue_el_t *first = q->first;
+    char *s = first->line;
+    // empty
+    if (first == NULL)
+        return NULL;
+
+    if(q->first == q->last) {
+        q->first = q->last = NULL;
+    } else {
+        q->first = q->first->next;
+    }
+    q->size--;
+    free(first);
+    return s;
+}
+
+void tail(FILE *f)
+{
+    char *line;
+    //long lineno = 0;
+    queue_t q;
+
+    QUEUE_INIT(q);
+
+    while((line = xgetline(f)) != NULL) {
+        enq(&q, line);
+        if(q.size > number)
+            free(deq(&q));
+    }
+
+    char *p;
+    while(q.size > 0) {
+        p = deq(&q);
+        puts(p);
+        free(p);
+    }
+
+}
+int main(int argc, char **argv)
+{
+    FILE *f;
+    parse_opt(argc, argv);
+
+    if (optind == argc || (optind == argc - 1 && strcmp(argv[optind], "-") == 0)) {
+        if (flag_verbosity == verbose)
+            puts("==> stdin <==");
+        tail(stdin);
+    } else if (optind == argc - 1) {
+        f = fopen(argv[optind], "r");
+        if (f == NULL) {
+            fprintf(stderr, "%s: Can't open file %s\n",
+                    PROGRAM_NAME, argv[optind]);
+            abort();
+        }
+        if (flag_verbosity == verbose)
+            printf("==> %s <==\n", argv[optind]);
+        tail(f);
+        fclose(f);
+    } else {
+        for(; optind < argc; optind++) {
+            if (strcmp(argv[optind], "-") == 0) {
+                f = stdin;
+                if (flag_verbosity != quiet)
+                    puts("==> stdin <==");
+
+            } else {
+                f = fopen(argv[optind], "r");
+                if (!f) {
+                    fprintf(stderr, "%s: Can't open file %s\n",
+                            PROGRAM_NAME, argv[optind]);
+                    abort();
+
+                }
+                if (flag_verbosity != quiet)
+                    printf("==> %s <==\n", argv[optind]);
+            }
+            tail(f);
+            if (f != stdin)
+                fclose(f);
+        }
+    }
+
+//     printf("flag_verbosity = %d, "
+//            "flag_skip = %d, number = %lu\n",
+//            flag_verbosity, flag_skip, number
+//           );
     return 0;
 }
